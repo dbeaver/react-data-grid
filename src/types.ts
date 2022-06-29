@@ -228,6 +228,7 @@ export interface Components<TRow, TSummaryRow> {
     | ComponentType<CheckboxFormatterProps>
   >;
   rowRenderer?: Maybe<ComponentType<RowRendererProps<TRow, TSummaryRow>>>;
+  cellRenderer?: Maybe<ComponentType<CellRendererProps<TRow, TSummaryRow>>>;
   noRowsFallback?: Maybe<React.ReactNode>;
 }
 
