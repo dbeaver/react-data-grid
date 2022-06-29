@@ -73,11 +73,11 @@ function Cell<R, SR>(
   }
 
   function handleMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+    selectCellWrapper(column.editorOptions?.editOnClick);
     onMouseDown?.(event);
   }
 
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
-    selectCellWrapper(column.editorOptions?.editOnClick);
     onRowClick?.(row, column);
     onClick?.(event);
   }
