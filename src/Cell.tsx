@@ -40,6 +40,7 @@ function Cell<R, SR>(
     onContextMenu,
     onRowChange,
     selectCell,
+    style,
     ...props
   }: CellRendererProps<R, SR>,
   ref: React.Ref<HTMLDivElement>
@@ -65,7 +66,7 @@ function Cell<R, SR>(
   function handleClick(event: React.MouseEvent<HTMLDivElement>) {
     if (onClick) {
       const cellEvent = createCellEvent(event);
-      onClick({ row, column, selectCell: selectCellWrapper }, cellEvent);
+      onClick({ rowIdx, row, column, selectCell: selectCellWrapper }, cellEvent);
       if (cellEvent.isGridDefaultPrevented()) return;
     }
     selectCellWrapper();
@@ -74,7 +75,7 @@ function Cell<R, SR>(
   function handleContextMenu(event: React.MouseEvent<HTMLDivElement>) {
     if (onContextMenu) {
       const cellEvent = createCellEvent(event);
-      onContextMenu({ row, column, selectCell: selectCellWrapper }, cellEvent);
+      onContextMenu({ rowIdx, row, column, selectCell: selectCellWrapper }, cellEvent);
       if (cellEvent.isGridDefaultPrevented()) return;
     }
     selectCellWrapper();
@@ -83,7 +84,7 @@ function Cell<R, SR>(
   function handleDoubleClick(event: React.MouseEvent<HTMLDivElement>) {
     if (onDoubleClick) {
       const cellEvent = createCellEvent(event);
-      onDoubleClick({ row, column, selectCell: selectCellWrapper }, cellEvent);
+      onDoubleClick({ rowIdx, row, column, selectCell: selectCellWrapper }, cellEvent);
       if (cellEvent.isGridDefaultPrevented()) return;
     }
     selectCellWrapper(true);
@@ -103,7 +104,10 @@ function Cell<R, SR>(
       ref={ref}
       tabIndex={tabIndex}
       className={className}
-      style={getCellStyle(column, colSpan)}
+      style={{
+        ...getCellStyle(column, colSpan),
+        ...style
+      }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
@@ -124,7 +128,7 @@ function Cell<R, SR>(
 
 const CellComponent = memo(forwardRef(Cell)) as <R, SR>(
   props: CellRendererProps<R, SR> & RefAttributes<HTMLDivElement>
-) => JSX.Element;
+) => React.JSX.Element;
 
 export default CellComponent;
 

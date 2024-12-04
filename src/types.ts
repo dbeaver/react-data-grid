@@ -145,7 +145,7 @@ export interface CellRendererProps<TRow, TSummaryRow>
   extends Pick<RenderRowProps<TRow, TSummaryRow>, 'row' | 'rowIdx' | 'selectCell'>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      'style' | 'children' | 'onClick' | 'onDoubleClick' | 'onContextMenu'
+      'children' | 'onClick' | 'onDoubleClick' | 'onContextMenu'
     > {
   column: CalculatedColumn<TRow, TSummaryRow>;
   colSpan: number | undefined;
@@ -168,6 +168,7 @@ export type CellMouseEvent = CellEvent<React.MouseEvent<HTMLDivElement>>;
 export type CellKeyboardEvent = CellEvent<React.KeyboardEvent<HTMLDivElement>>;
 
 export interface CellClickArgs<TRow, TSummaryRow = unknown> {
+  rowIdx: number;
   row: TRow;
   column: CalculatedColumn<TRow, TSummaryRow>;
   selectCell: (enableEditor?: boolean) => void;
@@ -196,7 +197,7 @@ export type CellKeyDownArgs<TRow, TSummaryRow = unknown> =
 
 export interface CellSelectArgs<TRow, TSummaryRow = unknown> {
   rowIdx: number;
-  row: TRow;
+  row: TRow | undefined;
   column: CalculatedColumn<TRow, TSummaryRow>;
 }
 
