@@ -29,16 +29,19 @@ export function useColumnWidths<R, SR>(
     // there is enough space for columns to flex and the grid was resized
     gridWidth !== prevGridWidth;
   const newTemplateColumns = [...templateColumns];
-  const columnsToMeasure: string[] = [];
+  const columnsToMeasure = new Set<string>();
 
   for (const { key, idx, width } of viewportColumns) {
     const columnWidth = columnWidths.get(key);
     if (key === columnToAutoResize?.key) {
-      newTemplateColumns[idx] =
-        columnToAutoResize.width === 'max-content'
-          ? columnToAutoResize.width
-          : `${columnToAutoResize.width}px`;
-      columnsToMeasure.push(key);
+      if (typeof columnToAutoResize.width === 'number') {
+        // this will skip measureColumnWidth, so size may exceed the maxWidth in some rare cases
+        newTemplateColumns[idx] = `${columnToAutoResize.width}px`;
+        columnsToMeasure.delete(key);
+      } else {
+        newTemplateColumns[idx] = columnToAutoResize.width;
+        columnsToMeasure.add(key);
+      }
     } else if (
       typeof width === 'string' &&
       // If the column is resized by the user, we don't want to measure it again
@@ -48,7 +51,7 @@ export function useColumnWidths<R, SR>(
         columnWidth === undefined)
     ) {
       newTemplateColumns[idx] = width;
-      columnsToMeasure.push(key);
+      columnsToMeasure.add(key);
     }
   }
 
@@ -58,7 +61,7 @@ export function useColumnWidths<R, SR>(
 
   function updateMeasuredAndResizedWidths() {
     setPreviousGridWidth(gridWidth);
-    if (columnsToMeasure.length === 0) return;
+    if (columnsToMeasure.size === 0) return;
 
     const newColumnWidths = new Map(columnWidths);
     let hasChanges = false;
@@ -134,6 +137,7 @@ export function useColumnWidths<R, SR>(
 
   return {
     gridTemplateColumns,
+    columnsToMeasure,
     handleColumnResize
   } as const;
 }
