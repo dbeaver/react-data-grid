@@ -320,7 +320,7 @@ function CommonFeatures() {
   const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
   const [selectedRows, setSelectedRows] = useState((): ReadonlySet<number> => new Set());
   const [isExporting, setIsExporting] = useState(false);
-  const gridRef = useRef<DataGridHandle>(null);
+  const gridRef = useRef<DataGridHandle<Row, SummaryRow>>(null);
   const columns = useMemo(() => getColumns(countries, direction), [direction]);
 
   const summaryRows = useMemo((): readonly SummaryRow[] => {

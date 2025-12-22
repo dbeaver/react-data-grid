@@ -108,11 +108,12 @@ export type DefaultColumnOptions<R, SR> = Pick<
   | 'draggable'
 >;
 
-export interface DataGridHandle {
+export interface DataGridHandle<R, SR = unknown> {
   element: HTMLDivElement | null;
   scrollToCell: (position: PartialPosition) => void;
   selectCell: (position: Position, options?: SelectCellOptions) => void;
   selectCellByKey: (position: PositionByKey, options?: SelectCellOptions) => void;
+  getColumnsOrdered: () => readonly CalculatedColumn<R, SR>[];
 }
 
 type SharedDivProps = Pick<
@@ -128,7 +129,7 @@ type SharedDivProps = Pick<
 >;
 
 export interface DataGridProps<R, SR = unknown, K extends Key = Key> extends SharedDivProps {
-  ref?: Maybe<React.Ref<DataGridHandle>>;
+  ref?: Maybe<React.Ref<DataGridHandle<R, SR>>>;
   /**
    * Grid and data Props
    */
@@ -535,7 +536,7 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
 
   useImperativeHandle(
     ref,
-    (): DataGridHandle => ({
+    (): DataGridHandle<R, SR> => ({
       element: gridRef.current,
       scrollToCell({ idx, rowIdx }) {
         const scrollToIdx =
@@ -550,7 +551,8 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
         }
       },
       selectCell,
-      selectCellByKey
+      selectCellByKey,
+      getColumnsOrdered
     })
   );
 
@@ -860,6 +862,10 @@ export function DataGrid<R, SR = unknown, K extends Key = Key>(props: DataGridPr
         column: columns[position.idx]
       });
     }
+  }
+
+  function getColumnsOrdered(): readonly CalculatedColumn<R, SR>[] {
+    return columns;
   }
 
   function selectCellByKey(position: PositionByKey, options?: SelectCellOptions): void {

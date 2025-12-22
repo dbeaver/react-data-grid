@@ -45,7 +45,7 @@ function ScrollToCell() {
   const [idx, setIdx] = useState<number | undefined>(10);
   const [rowIdx, setRowIdx] = useState<number | undefined>(10);
   const [scrollBehavior, setScrollBehavior] = useState<ScrollBehavior>('auto');
-  const gridRef = useRef<DataGridHandle>(null);
+  const gridRef = useRef<DataGridHandle<Row>>(null);
 
   function scrollToColumn() {
     gridRef.current!.scrollToCell({ idx });
